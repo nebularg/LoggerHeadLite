@@ -1,0 +1,15 @@
+﻿## Interface: 50400
+## Title: Loggerhead Lite
+## Notes: Automatically turns on the combat log for selected raid instances.
+## Author: Neb
+## Version: 1.1
+## SavedVariables: LoggerHeadNDB
+## OptionalDeps: Ace3, LibDBIcon-1.0
+## X-Category: Raid
+## X-Credits: Sano/rsmozang for LoggerHead
+
+embeds.xml
+locales.xml
+
+Core.lua
+Config.lua
