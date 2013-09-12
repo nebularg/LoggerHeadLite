@@ -133,7 +133,7 @@ function module:OnInitialize()
 	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("LoggerHeadLite/Profiles", LibStub("AceDBOptions-3.0"):GetOptionsTable(addon.db))
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("LoggerHeadLite/Profiles", L["Profiles"], ADDON_TITLE)
 
-	addon.dataObj = LibStub("LibDataBroker-1.1"):NewDataObject(ADDON_NAME, {
+	local dataObj = LibStub("LibDataBroker-1.1"):NewDataObject(ADDON_NAME, {
 		type = "data source",
 		label = COMBAT_LOG,
 		icon = LoggingCombat() and "Interface\\AddOns\\LoggerHeadLite\\enabled" or "Interface\\AddOns\\LoggerHeadLite\\disabled",
@@ -156,17 +156,17 @@ function module:OnInitialize()
 	hooksecurefunc("LoggingCombat", function(enable)
 		if type(enable) == "boolean" then
 			if enable then
-				addon.dataObj.icon = "Interface\\AddOns\\LoggerHeadLite\\enabled"
-				addon.dataObj.text = L["Enabled"]
+				dataObj.icon = "Interface\\AddOns\\LoggerHeadLite\\enabled"
+				dataObj.text = L["Enabled"]
 			else
-				addon.dataObj.icon = "Interface\\AddOns\\LoggerHeadLite\\disabled"
-				addon.dataObj.text = L["Disabled"]
+				dataObj.icon = "Interface\\AddOns\\LoggerHeadLite\\disabled"
+				dataObj.text = L["Disabled"]
 			end
 		end
 	end)
 
 	if icon then
-		icon:Register(ADDON_NAME, addon.dataObj, addon.db.profile.minimap)
+		icon:Register(ADDON_NAME, dataObj, addon.db.profile.minimap)
 		if not addon.db.profile.minimap.hide then
 			icon:Show(ADDON_NAME)
 		end

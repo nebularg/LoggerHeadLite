@@ -84,9 +84,6 @@ function addon:EnableLogging(auto)
 		LoggingChat(true)
 		print(CHATLOGENABLED)
 	end
-
-	self.dataObj.icon = "Interface\\AddOns\\LoggerHeadLite\\enabled"
-	self.dataObj.text = L["Enabled"]
 end
 
 function addon:DisableLogging(auto)
@@ -99,9 +96,6 @@ function addon:DisableLogging(auto)
 		LoggingChat(false)
 		print(CHATLOGDISABLED)
 	end
-
-	self.dataObj.icon = "Interface\\AddOns\\LoggerHeadLite\\disabled"
-	self.dataObj.text = L["Disabled"]
 end
 
 function addon:ToggleLogging()
