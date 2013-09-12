@@ -180,14 +180,15 @@ function module:OnEnable()
 		for i=1, 100 do
 			local _, _, _, _, _, _, mapID = EJ_GetInstanceByIndex(i, true)
 			if not mapID then break end
-			mapData[mapID] = tier
+			if mapID > 0 then
+				mapData[mapID] = tier
+			end
 		end
 	end
 
 	-- map the localizable mapID to GetInstanceInfo's areaID
 	for mapID in next, mapData do
 		local areaID = GetAreaMapInfo(mapID)
-		if not areaID then print("WHAT THE FUCK", mapID, areaID) end
 		if areaID then
 			instanceMapData[areaID] = mapID
 		end
