@@ -7,7 +7,7 @@ local icon = LibStub("LibDBIcon-1.0", true)
 
 local instanceMapData = {}
 local mapData = {
-	-- Map IDs from raids not in the Encounter Journal (http://www.wowpedia.org/MapID)
+	-- Map IDs for raids not in the Encounter Journal (http://www.wowpedia.org/MapID)
 	-- Classic
 	[696] = 1, -- Molten Core
 	[717] = 1, -- Ruins of Ahn'Qiraj
@@ -83,14 +83,14 @@ local function GetOptions()
 		for id, difficulties in next, db.zones do
 			local mapID = instanceMapData[id]
 			local name = mapID and GetMapNameByID(mapID) or ("Unknown Zone (%d)"):format(id)
-			local catIndex = mapID and mapData[mapID] or 0
-			local cat = EJ_GetTierInfo(catIndex) or UNKNOWN
+			local tierIndex = mapID and mapData[mapID] or 0
+			local tier = EJ_GetTierInfo(tierIndex) or UNKNOWN
 
-			if not options.args[cat] then
-				options.args[cat] = {
+			if not options.args[tier] then
+				options.args[tier] = {
 					type = "group",
-					name = cat,
-					order = 100 - catIndex,
+					name = tier,
+					order = 100 - tierIndex,
 					args = {},
 				}
 			end
@@ -100,7 +100,7 @@ local function GetOptions()
 				values[diff] = GetDifficultyInfo(diff)
 			end
 
-			options.args[cat].args[name] = {
+			options.args[tier].args[name] = {
 				type = "multiselect",
 				name = name,
 				--desc = BINDING_NAME_TOGGLECOMBATLOG,
@@ -174,7 +174,7 @@ function module:OnInitialize()
 end
 
 function module:OnEnable()
-	-- pull map ids for raids from the EJ
+	-- pull the mapID for raids from the EJ
 	for tier=4, EJ_GetNumTiers() do
 		EJ_SelectTier(tier)
 		local index = 1
