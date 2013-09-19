@@ -177,12 +177,17 @@ function module:OnEnable()
 	-- pull map ids for raids from the EJ
 	for tier=4, EJ_GetNumTiers() do
 		EJ_SelectTier(tier)
-		for i=1, 100 do
-			local _, _, _, _, _, _, mapID = EJ_GetInstanceByIndex(i, true)
-			if not mapID then break end
-			if mapID > 0 then
+		local index = 1
+		local instanceID = EJ_GetInstanceByIndex(index, true)
+		while instanceID do
+			EJ_SelectInstance(instanceID)
+			local _, _, _, _, _, mapID = EJ_GetInstanceInfo()
+			if mapID and mapID > 0 then
 				mapData[mapID] = tier
 			end
+
+			index = index + 1
+			instanceID = EJ_GetInstanceByIndex(index, true)
 		end
 	end
 
