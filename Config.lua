@@ -181,8 +181,9 @@ function module:OnEnable()
 		local instanceID = EJ_GetInstanceByIndex(index, true)
 		while instanceID do
 			EJ_SelectInstance(instanceID)
-			local _, _, _, _, _, mapID = EJ_GetInstanceInfo()
-			if mapID and mapID > 0 then
+			local _, _, _, _, _, mapID, wodMapID = EJ_GetInstanceInfo()
+			if tonumber(wodMapID) then mapID = wodMapID end -- XXX compat
+			if mapID and mapID > 0 and not mapData[mapID] then
 				mapData[mapID] = tier
 			end
 
@@ -201,6 +202,7 @@ function module:OnEnable()
 end
 
 function addon:OpenOptions()
+	InterfaceOptionsFrame_OpenToCategory(ADDON_TITLE)
 	InterfaceOptionsFrame_OpenToCategory(ADDON_TITLE)
 end
 

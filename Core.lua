@@ -16,7 +16,7 @@ local defaults = {
 
 local function print(msg)
 	local info = ChatTypeInfo["SYSTEM"]
-	DEFAULT_CHAT_FRAME:AddMessage(msg, info.r, info.g, info.b, info.id);
+	DEFAULT_CHAT_FRAME:AddMessage(msg, info.r, info.g, info.b, info.id)
 end
 
 local function ShowPrompt(zone, diff)
