@@ -1,4 +1,4 @@
-﻿## Interface: 50400
+﻿## Interface: 60000
 ## Title: LoggerHead Lite
 ## Notes: Automatically turns on the combat log for selected raid instances.
 ## Author: Neb
