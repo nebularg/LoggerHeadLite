@@ -154,14 +154,12 @@ function module:OnInitialize()
 	})
 
 	hooksecurefunc("LoggingCombat", function(enable)
-		if type(enable) == "boolean" then
-			if enable then
-				dataObj.icon = "Interface\\AddOns\\LoggerHeadLite\\enabled"
-				dataObj.text = L["Enabled"]
-			else
-				dataObj.icon = "Interface\\AddOns\\LoggerHeadLite\\disabled"
-				dataObj.text = L["Disabled"]
-			end
+		if enable == true or enable == 1 then
+			dataObj.icon = "Interface\\AddOns\\LoggerHeadLite\\enabled"
+			dataObj.text = L["Enabled"]
+		elseif enable == false then
+			dataObj.icon = "Interface\\AddOns\\LoggerHeadLite\\disabled"
+			dataObj.text = L["Disabled"]
 		end
 	end)
 
