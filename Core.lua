@@ -46,12 +46,15 @@ end
 
 function addon:CheckInstance(_, override)
 	local zoneName, instanceType, difficulty, difficultyName, _, _, _, areaID = GetInstanceInfo()
-	if instanceType == "raid" then
+	if instanceType == "raid" or difficulty == 8 then -- raid or challenge mode
 		local db = self.db.profile
 		if not db.zones[areaID] then
 			db.zones[areaID] = {}
 		end
 
+		if difficulty == 0 then
+			difficulty = GetRaidDifficultyID()
+		end
 		if override ~= nil then -- called from the prompt
 			db.zones[areaID][difficulty] = override
 		end
