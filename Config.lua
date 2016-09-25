@@ -189,6 +189,23 @@ function module:OnEnable()
 		end
 	end
 
+	-- and dungeons
+	for tier=4, EJ_GetNumTiers() do
+		EJ_SelectTier(tier)
+		local index = 1
+		local instanceID = EJ_GetInstanceByIndex(index, false)
+		while instanceID do
+			EJ_SelectInstance(instanceID)
+			local _, _, _, _, _, _, mapID = EJ_GetInstanceInfo()
+			if mapID and mapID > 0 and not mapData[mapID] then
+				mapData[mapID] = tier
+			end
+
+			index = index + 1
+			instanceID = EJ_GetInstanceByIndex(index, false)
+		end
+	end
+
 	-- map the localizable mapID to GetInstanceInfo's areaID
 	for mapID in next, mapData do
 		local areaID = GetAreaMapInfo(mapID)
