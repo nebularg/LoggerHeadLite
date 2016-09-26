@@ -1,44 +1,49 @@
 local ADDON_NAME, addon = ...
-local ADDON_TITLE = "LoggerHead Lite"
 local module = addon:NewModule("Config")
 
 local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 local icon = LibStub("LibDBIcon-1.0", true)
 
+local ADDON_TITLE = "LoggerHead Lite"
 local COMBAT_LOG = COMBAT_LOG
 local ENABLED = "|cff00ff00"..VIDEO_OPTIONS_ENABLED.."|r"
 local DISABLED = "|cffff0000"..VIDEO_OPTIONS_DISABLED.."|r"
+local UNKNOWN_ZONE = UNKNOWN.." (%d)"
 
-local instanceMapData = {}
-local mapData = {
-	-- Map IDs for raids not in the Encounter Journal (http://www.wowpedia.org/MapID)
-	-- Classic
-	[696] = 1, -- Molten Core
-	[717] = 1, -- Ruins of Ahn'Qiraj
-	[755] = 1, -- Blackwing Lair
-	[766] = 1, -- Ahn'Qiraj
-	-- The Burning Crusade
-	[775] = 2, -- Hyjal Summit
-	[776] = 2, -- Gruul's Lair
-	[779] = 2, -- Magtheridon's Lair
-	[780] = 2, -- Serpentshrine Cavern
-	[782] = 2, -- The Eye
-	[789] = 2, -- Sunwell Plateau
-	[796] = 2, -- Black Temple
-	[799] = 2, -- Karazhan
-	-- Wrath of the Lich King
-	[527] = 3, -- The Eye of Eternity
-	[529] = 3, -- Ulduar
-	[531] = 3, -- The Obsidian Sanctum
-	[532] = 3, -- Vault of Archavon
-	[535] = 3, -- Naxxramas
-	[543] = 3, -- Trial of the Crusader
-	[604] = 3, -- Icecrown Citadel
-	[609] = 3, -- The Ruby Sanctum
-	[718] = 3, -- Onyxia's Lair
-}
+local mapData, instanceMapData = nil, nil
+
+local function getMapIDs(tier, isRaid)
+	EJ_SelectTier(tier)
+	local index = 1
+	local instanceID = EJ_GetInstanceByIndex(index, isRaid)
+	while instanceID do
+		EJ_SelectInstance(instanceID)
+		local _, _, _, _, _, _, mapID = EJ_GetInstanceInfo()
+		if mapID and mapID > 0 and not mapData[mapID] then
+			mapData[mapID] = tier
+			-- map the localizable mapID to GetInstanceInfo's areaID
+			local areaID = GetAreaMapInfo(mapID)
+			if areaID then
+				instanceMapData[areaID] = mapID
+			end
+		end
+		index = index + 1
+		instanceID = EJ_GetInstanceByIndex(index, isRaid)
+	end
+end
 
 local function GetOptions()
+	if not mapData then
+		-- pull the mapID for instances from the EJ
+		mapData, instanceMapData = {}, {}
+		for tier = 1, EJ_GetNumTiers() do
+			getMapIDs(tier, true)
+			if tier > 4 then -- MoP+ for challenge mode dungeons
+				getMapIDs(tier, false)
+			end
+		end
+	end
+
 	local db = addon.db.profile
 	local options = {
 		name = ADDON_TITLE,
@@ -86,7 +91,7 @@ local function GetOptions()
 	if next(db.zones) then
 		for id, difficulties in next, db.zones do
 			local mapID = instanceMapData[id]
-			local name = mapID and GetMapNameByID(mapID) or ("Unknown Zone (%d)"):format(id)
+			local name = mapID and GetMapNameByID(mapID) or UNKNOWN_ZONE:format(id)
 			local tierIndex = mapID and mapData[mapID] or 0
 			local tier = EJ_GetTierInfo(tierIndex) or UNKNOWN
 
@@ -107,7 +112,6 @@ local function GetOptions()
 			options.args[tier].args[name] = {
 				type = "multiselect",
 				name = name,
-				--desc = BINDING_NAME_TOGGLECOMBATLOG,
 				values = values,
 				get = function(info, key) return difficulties[key] end,
 				set = function(info, key, value)
@@ -171,50 +175,6 @@ function module:OnInitialize()
 		icon:Register(ADDON_NAME, dataObj, addon.db.profile.minimap)
 		if not addon.db.profile.minimap.hide then
 			icon:Show(ADDON_NAME)
-		end
-	end
-end
-
-function module:OnEnable()
-	-- pull the mapID for raids from the EJ
-	for tier=4, EJ_GetNumTiers() do
-		EJ_SelectTier(tier)
-		local index = 1
-		local instanceID = EJ_GetInstanceByIndex(index, true)
-		while instanceID do
-			EJ_SelectInstance(instanceID)
-			local _, _, _, _, _, _, mapID = EJ_GetInstanceInfo()
-			if mapID and mapID > 0 and not mapData[mapID] then
-				mapData[mapID] = tier
-			end
-
-			index = index + 1
-			instanceID = EJ_GetInstanceByIndex(index, true)
-		end
-	end
-
-	-- and dungeons
-	for tier=4, EJ_GetNumTiers() do
-		EJ_SelectTier(tier)
-		local index = 1
-		local instanceID = EJ_GetInstanceByIndex(index, false)
-		while instanceID do
-			EJ_SelectInstance(instanceID)
-			local _, _, _, _, _, _, mapID = EJ_GetInstanceInfo()
-			if mapID and mapID > 0 and not mapData[mapID] then
-				mapData[mapID] = tier
-			end
-
-			index = index + 1
-			instanceID = EJ_GetInstanceByIndex(index, false)
-		end
-	end
-
-	-- map the localizable mapID to GetInstanceInfo's areaID
-	for mapID in next, mapData do
-		local areaID = GetAreaMapInfo(mapID)
-		if areaID then
-			instanceMapData[areaID] = mapID
 		end
 	end
 end
