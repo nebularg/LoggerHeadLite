@@ -1,6 +1,6 @@
-﻿## Interface: 60200
+﻿## Interface: 70000
 ## Title: LoggerHead Lite
-## Notes: Automatically turns on the combat log for selected raid instances.
+## Notes: Automatically turns on the combat log for selected raid and mythic+ instances.
 ## Author: Neb
 ## Version: 1.2
 ## SavedVariables: LoggerHeadNDB
