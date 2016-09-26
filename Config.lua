@@ -141,7 +141,7 @@ function module:OnInitialize()
 		type = "data source",
 		label = COMBAT_LOG,
 		icon = LoggingCombat() and "Interface\\AddOns\\LoggerHeadLite\\enabled" or "Interface\\AddOns\\LoggerHeadLite\\disabled",
-		text = LoggingCombat() and L["Enabled"] or L["Disabled"],
+		text = LoggingCombat() and ENABLED or DISABLED,
 		OnClick = function(self, button)
 			if button == "RightButton" then
 				addon:OpenOptions()
@@ -160,10 +160,10 @@ function module:OnInitialize()
 	hooksecurefunc("LoggingCombat", function(enable)
 		if enable == true or enable == 1 then
 			dataObj.icon = "Interface\\AddOns\\LoggerHeadLite\\enabled"
-			dataObj.text = L["Enabled"]
+			dataObj.text = ENABLED
 		elseif enable == false then
 			dataObj.icon = "Interface\\AddOns\\LoggerHeadLite\\disabled"
-			dataObj.text = L["Disabled"]
+			dataObj.text = DISABLED
 		end
 	end)
 
