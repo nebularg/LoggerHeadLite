@@ -1,9 +1,13 @@
 local ADDON_NAME, addon = ...
-local ADDON_TITLE = GetAddOnMetadata(ADDON_NAME, "Title")
+local ADDON_TITLE = "LoggerHead Lite"
 local module = addon:NewModule("Config")
 
 local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 local icon = LibStub("LibDBIcon-1.0", true)
+
+local COMBAT_LOG = COMBAT_LOG
+local ENABLED = "|cff00ff00"..VIDEO_OPTIONS_ENABLED.."|r"
+local DISABLED = "|cffff0000"..VIDEO_OPTIONS_DISABLED.."|r"
 
 local instanceMapData = {}
 local mapData = {
@@ -44,7 +48,7 @@ local function GetOptions()
 		args = {
 			desc = {
 				type = "description",
-				name = GetAddOnMetadata(ADDON_NAME, "Notes").."\n",
+				name = L["Automatically turns on the combat log for selected raid and mythic+ instances."].."\n",
 				fontSize = "medium",
 				order = 0,
 			},
