@@ -32,6 +32,9 @@ local function ShowPrompt(zone, diff)
 		}
 	end
 	StaticPopup_Show("LoggerHeadLiteLogConfirm", ("%s %s"):format(diff, zone))
+	if diff == 8 then -- catch the m+ start event
+		LoggingCombat(true)
+	end
 end
 
 function addon:OnInitialize()
