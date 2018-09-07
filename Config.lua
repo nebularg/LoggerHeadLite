@@ -18,10 +18,13 @@ local function getMapIDs(tier, isRaid)
 	local instanceID = EJ_GetInstanceByIndex(index, isRaid)
 	while instanceID do
 		EJ_SelectInstance(instanceID)
-		local _, _, _, _, _, _, mapID = EJ_GetInstanceInfo()
+		local instanceName, _, _, _, _, _, mapID = EJ_GetInstanceInfo()
 		if mapID and mapID > 0 then
 			local info = C_Map.GetMapInfo(mapID)
 			mapData[info.name] = tier
+			if info.name ~= instanceName then -- just in case
+				mapData[instanceName] = tier
+			end
 		end
 		index = index + 1
 		instanceID = EJ_GetInstanceByIndex(index, isRaid)
