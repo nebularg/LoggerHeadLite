@@ -10,7 +10,7 @@ local ENABLED = "|cff00ff00"..VIDEO_OPTIONS_ENABLED.."|r"
 local DISABLED = "|cffff0000"..VIDEO_OPTIONS_DISABLED.."|r"
 local UNKNOWN_ZONE = UNKNOWN.." (%d)"
 
-local mapData, instanceMapData = nil, nil
+local mapData = nil
 
 local function getMapIDs(tier, isRaid)
 	EJ_SelectTier(tier)
@@ -19,13 +19,9 @@ local function getMapIDs(tier, isRaid)
 	while instanceID do
 		EJ_SelectInstance(instanceID)
 		local _, _, _, _, _, _, mapID = EJ_GetInstanceInfo()
-		if mapID and mapID > 0 and not mapData[mapID] then
-			mapData[mapID] = tier
-			-- map the localizable mapID to GetInstanceInfo's areaID
-			local areaID = GetAreaMapInfo(mapID)
-			if areaID then
-				instanceMapData[areaID] = mapID
-			end
+		if mapID and mapID > 0 then
+			local info = C_Map.GetMapInfo(mapID)
+			mapData[info.name] = tier
 		end
 		index = index + 1
 		instanceID = EJ_GetInstanceByIndex(index, isRaid)
@@ -34,8 +30,7 @@ end
 
 local function GetOptions()
 	if not mapData then
-		-- pull the mapID for instances from the EJ
-		mapData, instanceMapData = {}, {}
+		mapData = {}
 		for tier = 1, EJ_GetNumTiers() do
 			getMapIDs(tier, true)
 			if tier > 4 then -- MoP+ for challenge mode dungeons
@@ -90,9 +85,8 @@ local function GetOptions()
 
 	if next(db.zones) then
 		for id, difficulties in next, db.zones do
-			local mapID = instanceMapData[id]
-			local name = mapID and GetMapNameByID(mapID) or UNKNOWN_ZONE:format(id)
-			local tierIndex = mapID and mapData[mapID] or 0
+			local name = GetRealZoneText(id) or UNKNOWN_ZONE:format(id)
+			local tierIndex = mapData[name] or 0
 			local tier = EJ_GetTierInfo(tierIndex) or UNKNOWN
 
 			if not options.args[tier] then
