@@ -41,24 +41,25 @@ function addon:OnInitialize()
 	self.db = LibStub("AceDB-3.0"):New("LoggerHeadNDB", defaults, true)
 end
 
-local function delayedCheck()
-	addon:ScheduleTimer("CheckInstance", 2)
-end
-
 function addon:OnEnable()
-	self:RegisterEvent("PLAYER_ENTERING_WORLD", delayedCheck)
+	self:RegisterEvent("PLAYER_ENTERING_WORLD", "CheckInstance")
 	self:RegisterEvent("PLAYER_DIFFICULTY_CHANGED", "CheckInstance")
 	self:CheckInstance()
 end
 
+local checkAttempt = 0
 function addon:CheckInstance(_, override)
 	local zoneName, instanceType, difficulty, difficultyName, _, _, _, areaID = GetInstanceInfo()
-	if instanceType == "raid" or difficulty == 8 then -- raid or challenge mode
-		if difficulty == 0 then
-			delayedCheck()
-			return
+	if difficulty == 0 and (instanceType == "raid" or instanceType == "party") then
+		-- this shouldn't really be needed, but oh well
+		if checkAttempt < 15 then
+			checkAttempt = checkAttempt + 1
+			self:ScheduleTimer("CheckInstance", 0.2)
 		end
-
+		return
+	end
+	checkAttempt = 0
+	if instanceType == "raid" or difficulty == 8 then -- raid or challenge mode
 		local db = self.db.profile
 		if not db.zones[areaID] then
 			db.zones[areaID] = {}
