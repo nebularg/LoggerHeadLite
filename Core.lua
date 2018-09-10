@@ -14,7 +14,7 @@ local defaults = {
 	}
 }
 
-local function print(msg)
+local function sysprint(msg)
 	local info = ChatTypeInfo["SYSTEM"]
 	DEFAULT_CHAT_FRAME:AddMessage(msg, info.r, info.g, info.b, info.id)
 end
@@ -93,24 +93,24 @@ end
 function addon:EnableLogging(auto)
 	if not LoggingCombat() then
 		LoggingCombat(true)
-		print(COMBATLOGENABLED)
+		sysprint(COMBATLOGENABLED)
 	end
 
 	if self.db.profile.chat and not LoggingChat() then
 		LoggingChat(true)
-		print(CHATLOGENABLED)
+		sysprint(CHATLOGENABLED)
 	end
 end
 
 function addon:DisableLogging(auto)
 	if LoggingCombat() then
 		LoggingCombat(false)
-		print(COMBATLOGDISABLED)
+		sysprint(COMBATLOGDISABLED)
 	end
 
 	if self.db.profile.chat and LoggingChat() then
 		LoggingChat(false)
-		print(CHATLOGDISABLED)
+		sysprint(CHATLOGDISABLED)
 	end
 end
 
