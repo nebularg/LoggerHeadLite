@@ -26,8 +26,8 @@ local function ShowPrompt(zone, diff)
 			button1 = ENABLE,
 			button2 = DISABLE,
 			sound = SOUNDKIT.READY_CHECK,
-			OnAccept = function() addon:CheckInstance(nil, true) end,
-			OnCancel = function() addon:CheckInstance(nil, false) end,
+			OnAccept = function() addon:CheckInstance(true) end,
+			OnCancel = function() addon:CheckInstance(false) end,
 			preferredIndex = STATICPOPUP_NUMDIALOGS,
 		}
 	end
@@ -42,13 +42,17 @@ function addon:OnInitialize()
 end
 
 function addon:OnEnable()
-	self:RegisterEvent("PLAYER_ENTERING_WORLD", "CheckInstance")
-	self:RegisterEvent("PLAYER_DIFFICULTY_CHANGED", "CheckInstance")
+	self:RegisterEvent("PLAYER_ENTERING_WORLD")
+	self:RegisterEvent("PLAYER_DIFFICULTY_CHANGED", "PLAYER_ENTERING_WORLD")
+	self:CheckInstance()
+end
+
+function addon:PLAYER_ENTERING_WORLD()
 	self:CheckInstance()
 end
 
 local checkAttempt = 0
-function addon:CheckInstance(_, override)
+function addon:CheckInstance(override)
 	local zoneName, instanceType, difficulty, difficultyName, _, _, _, areaID = GetInstanceInfo()
 	if difficulty == 0 and (instanceType == "raid" or instanceType == "party") then
 		-- this shouldn't really be needed, but oh well
