@@ -11,6 +11,11 @@ local DISABLED = "|cffff0000"..VIDEO_OPTIONS_DISABLED.."|r"
 local UNKNOWN_ZONE = UNKNOWN.." (%d)"
 
 local mapData = nil
+local mapOverrides = {
+	-- For when EJ_GetInstanceInfo and GetRealZoneText don't use the same name /wrists
+	[320] = 531, -- Temple of Ahn'Qiraj -> Ahn'Qiraj Temple
+	[334] = 550, -- The Eye -> Tempest Keep
+}
 
 local function getMapIDs(tier, isRaid)
 	EJ_SelectTier(tier)
@@ -20,11 +25,12 @@ local function getMapIDs(tier, isRaid)
 		EJ_SelectInstance(instanceID)
 		local instanceName, _, _, _, _, _, mapID = EJ_GetInstanceInfo()
 		if mapID and mapID > 0 then
-			local info = C_Map.GetMapInfo(mapID)
-			mapData[info.name] = tier
-			if info.name ~= instanceName then -- just in case
-				mapData[instanceName] = tier
+			-- local info = C_Map.GetMapInfo(mapID)
+			-- mapData[info.name] = tier
+			if mapOverrides[mapID] then
+				instanceName = GetRealZoneText(mapOverrides[mapID])
 			end
+			mapData[instanceName] = tier
 		end
 		index = index + 1
 		instanceID = EJ_GetInstanceByIndex(index, isRaid)
