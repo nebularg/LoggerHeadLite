@@ -32,9 +32,6 @@ local function ShowPrompt(zone, diff)
 		}
 	end
 	StaticPopup_Show("LoggerHeadLiteLogConfirm", ("%s %s"):format(diff, zone))
-	if diff == 8 then -- catch the m+ start event
-		LoggingCombat(true)
-	end
 end
 
 function addon:OnInitialize()
@@ -75,6 +72,9 @@ function addon:CheckInstance(override)
 		if db.zones[areaID][difficulty] == nil then
 			if db.prompt then
 				ShowPrompt(zoneName, difficultyName)
+				if difficulty == 8 then -- catch the m+ start event
+					LoggingCombat(true)
+				end
 				return
 			else
 				db.zones[areaID][difficulty] = false
