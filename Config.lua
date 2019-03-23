@@ -103,19 +103,45 @@ local function GetOptions()
 
 			local values = {}
 			for diff in next, difficulties do
+				if diff == 8 then
+					values = nil
+					break
+				end
 				values[diff] = GetDifficultyInfo(diff)
 			end
 
-			options.args[tier].args[name] = {
-				type = "multiselect",
-				name = name,
-				values = values,
-				get = function(info, key) return difficulties[key] end,
-				set = function(info, key, value)
-					difficulties[key] = value
-					addon:CheckInstance()
-				end,
-			}
+			if values then
+				options.args[tier].args[name] = {
+					type = "multiselect",
+					name = name,
+					values = values,
+					get = function(info, key) return difficulties[key] end,
+					set = function(info, key, value)
+						difficulties[key] = value
+						addon:CheckInstance()
+					end,
+					order = 0,
+				}
+			else
+				if not options.args[tier].args["keystone"] then
+					options.args[tier].args["keystone"] = {
+						type = "group", inline = true,
+						name = GetDifficultyInfo(8),
+						get = function(info) return db.zones[info.arg][8] end,
+						set = function(info, value)
+							db.zones[info.arg][8] = value
+							addon:CheckInstance()
+						end,
+						order = 1,
+						args = {},
+					}
+				end
+				options.args[tier].args["keystone"].args[name] = {
+					type = "toggle",
+					name = name,
+					arg = id,
+				}
+			end
 		end
 
 	else
