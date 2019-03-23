@@ -7,6 +7,7 @@ local defaults = {
 	profile = {
 		zones = {},
 		prompt = true,
+		partial = true,
 		chat = false,
 		minimap = {
 			hide = false,
@@ -70,7 +71,7 @@ function addon:CheckInstance(override)
 		end
 
 		if db.zones[areaID][difficulty] == nil then
-			if db.prompt then
+			if db.prompt and (not db.partial or GetNumGroupMembers() > 4) then
 				ShowPrompt(zoneName, difficultyName)
 				if difficulty == 8 then -- catch the m+ start event
 					LoggingCombat(true)

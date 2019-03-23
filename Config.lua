@@ -67,11 +67,18 @@ local function GetOptions()
 				desc = L["Prompt to enable logging when entering a new raid instance."],
 				order = 1,
 			},
+			partial = {
+				type = "toggle",
+				name = L["Ignore partial group"],
+				desc = L["Skip the prompt if your instance group has less than five players."],
+				disabled = function() return not db.prompt end,
+				order = 2,
+			},
 			chat = {
 				type = "toggle",
 				name = L["Log chat"],
 				desc = L["Enable chat logging when combat logging is enabled."],
-				order = 2,
+				order = 3,
 			},
 			minimap = {
 				type = "toggle",
