@@ -61,7 +61,7 @@ function addon:CheckInstance(override)
 		return
 	end
 	checkAttempt = 0
-	if instanceType == "raid" or difficulty == 8 then -- raid or challenge mode
+	if instanceType == "raid" or (instanceType == "party" and difficulty == 8) then -- raid or challenge mode
 		local db = self.db.profile
 		if not db.zones[areaID] then
 			db.zones[areaID] = {}
