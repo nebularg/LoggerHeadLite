@@ -5,9 +5,10 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 local icon = LibStub("LibDBIcon-1.0", true)
 
 local ADDON_TITLE = "LoggerHead Lite"
-local COMBAT_LOG = COMBAT_LOG
-local ENABLED = "|cff00ff00"..VIDEO_OPTIONS_ENABLED.."|r"
-local DISABLED = "|cffff0000"..VIDEO_OPTIONS_DISABLED.."|r"
+local COMBAT_LOG = _G.COMBAT_LOG
+local ENABLED = "|cff00ff00"..L["Enabled"].."|r"
+local DISABLED = "|cffff0000"..L["Disabled"].."|r"
+local UNKNOWN = _G.UNKNOWN
 local UNKNOWN_ZONE = UNKNOWN.." (%d)"
 
 local mapData = {}
@@ -80,7 +81,7 @@ else
 
 	function setMapData()
 		for k, v in next, mapData do
-			if tonumber(k) then
+			if type(k) == "number" then
 				local z = GetRealZoneText(k)
 				if z then
 					mapData[z] = v
