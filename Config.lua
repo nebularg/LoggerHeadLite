@@ -10,42 +10,91 @@ local ENABLED = "|cff00ff00"..VIDEO_OPTIONS_ENABLED.."|r"
 local DISABLED = "|cffff0000"..VIDEO_OPTIONS_DISABLED.."|r"
 local UNKNOWN_ZONE = UNKNOWN.." (%d)"
 
-local mapData = nil
+local mapData = {}
 local mapOverrides = {
 	-- For when EJ_GetInstanceInfo and GetRealZoneText don't use the same name /wrists
 	[320] = 531, -- Temple of Ahn'Qiraj -> Ahn'Qiraj Temple
 	[334] = 550, -- The Eye -> Tempest Keep
 }
 
-local function getMapIDs(tier, isRaid)
-	EJ_SelectTier(tier)
-	local index = 1
-	local instanceID = EJ_GetInstanceByIndex(index, isRaid)
-	while instanceID do
-		EJ_SelectInstance(instanceID)
-		local instanceName, _, _, _, _, _, mapID = EJ_GetInstanceInfo()
-		if mapID and mapID > 0 then
-			-- local info = C_Map.GetMapInfo(mapID)
-			-- mapData[info.name] = tier
-			if mapOverrides[mapID] then
-				instanceName = GetRealZoneText(mapOverrides[mapID])
-			end
-			mapData[instanceName] = tier
-		end
-		index = index + 1
-		instanceID = EJ_GetInstanceByIndex(index, isRaid)
-	end
-end
+local setMapData
 
-local function GetOptions()
-	if not mapData then
-		mapData = {}
+if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+	local function getMapIDs(tier, isRaid)
+		EJ_SelectTier(tier)
+		local index = 1
+		local journalInstanceID, instanceName, _, _, _, _, _, mapID = EJ_GetInstanceByIndex(index, isRaid)
+		repeat
+			if mapID and mapID > 0 then
+				if mapOverrides[mapID] then
+					instanceName = GetRealZoneText(mapOverrides[mapID])
+				end
+				mapData[instanceName] = tier
+			end
+			index = index + 1
+			journalInstanceID, instanceName, _, _, _, _, _, mapID = EJ_GetInstanceByIndex(index, isRaid)
+		until not journalInstanceID
+	end
+
+	function setMapData()
 		for tier = 1, EJ_GetNumTiers() do
 			getMapIDs(tier, true)
 			if tier > 4 then -- MoP+ for challenge mode dungeons
 				getMapIDs(tier, false)
 			end
 		end
+		mapOverrides = nil
+	end
+else
+	mapData = {
+		-- Classic
+		[249] = 1, -- Onyxia's Lair
+		[409] = 1, -- Molten Core
+		[469] = 1, -- Blackwing Lair
+		[509] = 1, -- Ruins of Ahn'Qiraj
+		[531] = 1, -- Ahn'Qiraj Temple
+		[533] = 1, -- Naxxramas
+		[309] = 1, -- Zul'Gurub
+		-- TBC
+		[532] = 2, -- Karazhan
+		[565] = 2, -- Gruul's Lair
+		[544] = 2, -- Magtheridon's Lair
+		[564] = 2, -- Black Temple
+		[534] = 2, -- Hyjal Summit
+		[548] = 2, -- Serpentshrine Cavern
+		[550] = 2, -- Tempest Keep
+		[580] = 2, -- Sunwell Plateau
+		[568] = 2, -- Zul'Aman
+		-- Wrath
+		[631] = 3, -- Icecrown Citadel
+		[533] = 3, -- Naxxramas
+		[249] = 3, -- Onyxia's Lair
+		[616] = 3, -- The Eye of Eternity
+		[615] = 3, -- The Obsidian Sanctum
+		[724] = 3, -- The Ruby Sanctum
+		[649] = 3, -- Trial of the Crusader
+		[603] = 3, -- Ulduar
+		[624] = 3, -- Vault of Archavon
+	}
+	mapOverrides = nil
+
+	function setMapData()
+		for k, v in next, mapData do
+			if tonumber(k) then
+				local z = GetRealZoneText(k)
+				if z then
+					mapData[z] = v
+				end
+				mapData[k] = nil
+			end
+		end
+	end
+end
+
+local function GetOptions()
+	if setMapData then
+		setMapData()
+		setMapData = nil
 	end
 
 	local db = addon.db.profile
@@ -103,7 +152,7 @@ local function GetOptions()
 		for id, difficulties in next, db.zones do
 			local name = GetRealZoneText(id) or UNKNOWN_ZONE:format(id)
 			local tierIndex = mapData[name] or 0
-			local tier = EJ_GetTierInfo(tierIndex) or UNKNOWN
+			local tier = L["EXPANSION_NAME"..(tierIndex - 1)] or UNKNOWN
 
 			if not options.args[tier] then
 				options.args[tier] = {

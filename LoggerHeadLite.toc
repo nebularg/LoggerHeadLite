@@ -1,4 +1,4 @@
-## Interface: 90005
+## Interface: 90207
 ## Title: LoggerHead Lite
 ## Notes: Automatically turns on the combat log for selected raid and mythic+ instances.
 ## Author: Neb

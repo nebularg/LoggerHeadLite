@@ -1,4 +1,5 @@
 # LoggerHeadLite
+
 LoggerHead Lite is a an automated combat log enabler.
 
 The "Lite" means it only cares about when you are in a raid or mythic+ instance and is greatly simplified
@@ -9,5 +10,6 @@ The "Lite" means it only cares about when you are in a raid or mythic+ instance 
 
 If you want to clear out old entries, you can reset the database in Profiles.
 
-### Download
-https://mods.curse.com/addons/wow/loggerheadlite
+## Download
+
+<https://www.curseforge.com/wow/addons/loggerheadlite>
