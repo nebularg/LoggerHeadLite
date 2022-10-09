@@ -46,8 +46,7 @@ if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
 				end
 			end
 		end
-
-		return 0, GetRealZoneText(id)
+		return 0, 0, GetRealZoneText(id)
 	end
 else
 	local mapData = {
