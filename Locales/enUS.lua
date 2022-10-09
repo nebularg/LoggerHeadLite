@@ -1,5 +1,5 @@
 local ADDON_NAME, addon = ...
-local L = LibStub("AceLocale-3.0"):NewLocale(ADDON_NAME, "enUS", true, nil)
+local L = LibStub("AceLocale-3.0"):NewLocale(ADDON_NAME, "enUS", true, "raw")
 
 
 L["EXPANSION_NAME0"] = "Classic"

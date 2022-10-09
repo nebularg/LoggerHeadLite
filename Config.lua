@@ -9,95 +9,89 @@ local COMBAT_LOG = _G.COMBAT_LOG
 local ENABLED = "|cff00ff00"..L["Enabled"].."|r"
 local DISABLED = "|cffff0000"..L["Disabled"].."|r"
 local UNKNOWN = _G.UNKNOWN
-local UNKNOWN_ZONE = UNKNOWN.." (%d)"
+local UNKNOWN_ID = UNKNOWN.." (%d)"
 
-local mapData = {}
-local mapOverrides = {
-	-- For when EJ_GetInstanceInfo and GetRealZoneText don't use the same name /wrists
-	[320] = 531, -- Temple of Ahn'Qiraj -> Ahn'Qiraj Temple
-	[334] = 550, -- The Eye -> Tempest Keep
-}
-
-local setMapData
+local getTierName, getInstanceInfo
 
 if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-	local function getMapIDs(tier, isRaid)
+	function getTierName(index)
+		local name = EJ_GetTierInfo(index)
+		return name
+	end
+
+	local function getInstanceName(id, tier, isRaid)
 		EJ_SelectTier(tier)
 		local index = 1
-		local journalInstanceID, instanceName, _, _, _, _, _, mapID = EJ_GetInstanceByIndex(index, isRaid)
+		local journalInstanceID, instanceName, _, _, _, _, _, _, _, _, instanceID = EJ_GetInstanceByIndex(index, isRaid)
 		repeat
-			if mapID and mapID > 0 then
-				if mapOverrides[mapID] then
-					instanceName = GetRealZoneText(mapOverrides[mapID])
-				end
-				mapData[instanceName] = tier
+			if instanceID == id and (not isRaid or tier < 5 or index > 1) then
+				-- starting with MoP raids, index 1 is world bosses, but uses the instanceID of index 2 z.z
+				return instanceName, index
 			end
 			index = index + 1
-			journalInstanceID, instanceName, _, _, _, _, _, mapID = EJ_GetInstanceByIndex(index, isRaid)
+			journalInstanceID, instanceName, _, _, _, _, _, _, _, _, instanceID = EJ_GetInstanceByIndex(index, isRaid)
 		until not journalInstanceID
 	end
 
-	function setMapData()
+	function getInstanceInfo(id)
 		for tier = 1, EJ_GetNumTiers() do
-			getMapIDs(tier, true)
+			local name, index = getInstanceName(id, tier, true)
+			if name then
+				return tier, index, name
+			end
 			if tier > 4 then -- MoP+ for challenge mode dungeons
-				getMapIDs(tier, false)
+				name, index = getInstanceName(id, tier, false)
+				if name then
+					return tier, index, name
+				end
 			end
 		end
-		mapOverrides = nil
+
+		return 0, GetRealZoneText(id)
 	end
 else
-	mapData = {
+	local mapData = {
 		-- Classic
-		[249] = 1, -- Onyxia's Lair
-		[409] = 1, -- Molten Core
-		[469] = 1, -- Blackwing Lair
-		[509] = 1, -- Ruins of Ahn'Qiraj
-		[531] = 1, -- Ahn'Qiraj Temple
-		[533] = 1, -- Naxxramas
-		[309] = 1, -- Zul'Gurub
+		[249] = {WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and 1 or 3}, -- Onyxia's Lair
+		[309] = {1}, -- Zul'Gurub
+		[409] = {1}, -- Molten Core
+		[469] = {1}, -- Blackwing Lair
+		[509] = {1}, -- Ruins of Ahn'Qiraj
+		[531] = {1}, -- Ahn'Qiraj Temple
+		[533] = {WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and 1 or 3}, -- Naxxramas
 		-- TBC
-		[532] = 2, -- Karazhan
-		[565] = 2, -- Gruul's Lair
-		[544] = 2, -- Magtheridon's Lair
-		[564] = 2, -- Black Temple
-		[534] = 2, -- Hyjal Summit
-		[548] = 2, -- Serpentshrine Cavern
-		[550] = 2, -- Tempest Keep
-		[580] = 2, -- Sunwell Plateau
-		[568] = 2, -- Zul'Aman
+		[532] = {2}, -- Karazhan
+		[534] = {2}, -- Hyjal Summit
+		[544] = {2}, -- Magtheridon's Lair
+		[548] = {2}, -- Serpentshrine Cavern
+		[550] = {2}, -- Tempest Keep
+		[564] = {2}, -- Black Temple
+		[565] = {2}, -- Gruul's Lair
+		[568] = {2}, -- Zul'Aman
+		[580] = {2}, -- Sunwell Plateau
 		-- Wrath
-		[631] = 3, -- Icecrown Citadel
-		[533] = 3, -- Naxxramas
-		[249] = 3, -- Onyxia's Lair
-		[616] = 3, -- The Eye of Eternity
-		[615] = 3, -- The Obsidian Sanctum
-		[724] = 3, -- The Ruby Sanctum
-		[649] = 3, -- Trial of the Crusader
-		[603] = 3, -- Ulduar
-		[624] = 3, -- Vault of Archavon
+		[603] = {3}, -- Ulduar
+		[615] = {3}, -- The Obsidian Sanctum
+		[616] = {3}, -- The Eye of Eternity
+		[624] = {3}, -- Vault of Archavon
+		[631] = {3}, -- Icecrown Citadel
+		[649] = {3}, -- Trial of the Crusader
+		[724] = {3}, -- The Ruby Sanctum
 	}
-	mapOverrides = nil
 
-	function setMapData()
-		for k, v in next, mapData do
-			if type(k) == "number" then
-				local z = GetRealZoneText(k)
-				if z then
-					mapData[z] = v
-				end
-				mapData[k] = nil
-			end
+	function getTierName(tier)
+		if tier > 0 and tier <= GetServerExpansionLevel() + 1 then
+			return L["EXPANSION_NAME"..(tier - 1)]
 		end
+	end
+
+	function getInstanceInfo(id)
+		local tier = mapData[id] and mapData[id][1] or 0
+		return tier, 0, GetRealZoneText(id)
 	end
 end
 
 local function GetOptions()
-	if setMapData then
-		setMapData()
-		setMapData = nil
-	end
-
 	local db = addon.db.profile
 	local options = {
 		name = ADDON_TITLE,
@@ -151,59 +145,63 @@ local function GetOptions()
 
 	if next(db.zones) then
 		for id, difficulties in next, db.zones do
-			local name = GetRealZoneText(id) or UNKNOWN_ZONE:format(id)
-			local tierIndex = mapData[name] or 0
-			local tier = L["EXPANSION_NAME"..(tierIndex - 1)] or UNKNOWN
-
-			if not options.args[tier] then
-				options.args[tier] = {
-					type = "group",
-					name = tier,
-					order = 100 - tierIndex,
-					args = {},
-				}
-			end
-
-			local values = {}
-			for diff in next, difficulties do
-				if diff == 8 then
-					values = nil
-					break
-				end
-				values[diff] = GetDifficultyInfo(diff)
-			end
-
-			if values then
-				options.args[tier].args[name] = {
-					type = "multiselect",
-					name = name,
-					values = values,
-					get = function(info, key) return difficulties[key] end,
-					set = function(info, key, value)
-						difficulties[key] = value
-						addon:CheckInstance()
-					end,
-					order = 0,
-				}
+			if not next(difficulties) then
+				db.zones[id] = nil
 			else
-				if not options.args[tier].args["keystone"] then
-					options.args[tier].args["keystone"] = {
-						type = "group", inline = true,
-						name = GetDifficultyInfo(8),
-						get = function(info) return db.zones[info.arg][8] end,
-						set = function(info, value)
-							db.zones[info.arg][8] = value
-							addon:CheckInstance()
-						end,
-						order = 1,
+				local tier, index, name = getInstanceInfo(id)
+				if not name or name == "" then name = UNKNOWN_ID:format(id) end
+				local tierName = getTierName(tier) or UNKNOWN
+
+				if not options.args[tierName] then
+					options.args[tierName] = {
+						type = "group",
+						name = tierName,
+						order = 100 - tier,
 						args = {},
 					}
 				end
-				options.args[tier].args["keystone"].args[name] = {
-					type = "toggle",
-					name = name,
-					arg = id,
-				}
+
+				local values = {}
+				for diff in next, difficulties do
+					if diff == 8 then
+						values = nil
+						break
+					end
+					values[diff] = GetDifficultyInfo(diff) or UNKNOWN_ID:format(diff)
+				end
+
+				if values then
+					options.args[tierName].args[name] = {
+						type = "multiselect",
+						name = name,
+						values = values,
+						get = function(info, key) return difficulties[key] end,
+						set = function(info, key, value)
+							difficulties[key] = value
+							addon:CheckInstance()
+						end,
+						order = index,
+					}
+				elseif GetDifficultyInfo(8) then -- Classic check, just skip keystones (copied savedvars?)
+					if not options.args[tierName].args["keystone"] then
+						options.args[tierName].args["keystone"] = {
+							type = "group", inline = true,
+							name = GetDifficultyInfo(8),
+							get = function(info) return db.zones[info.arg][8] end,
+							set = function(info, value)
+								db.zones[info.arg][8] = value
+								addon:CheckInstance()
+							end,
+							order = -1,
+							args = {},
+						}
+					end
+					options.args[tierName].args["keystone"].args[name] = {
+						type = "toggle",
+						name = name,
+						arg = id,
+					}
+				end
 			end
 		end
 
