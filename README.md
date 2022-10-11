@@ -2,7 +2,7 @@
 
 LoggerHead Lite is a an automated combat log enabler.
 
-The "Lite" means it only cares about when you are in a raid or mythic+ instance and is greatly simplified
+The "Lite" means it only cares about when you are in a raid or mythic keystone dungeon and is greatly simplified. For classic, heroic dungeons are also included.
 
 **`/lh`** for options. Only instances you've entered will show. The first time you enter a raid or start a mythic keystone dungeon, you'll get a popup asking if you'd like to log that instance/difficulty.
 
