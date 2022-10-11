@@ -51,7 +51,7 @@ end
 
 local checkAttempt = 0
 function addon:CheckInstance(override)
-	local zoneName, instanceType, difficulty, difficultyName, _, _, _, areaID = GetInstanceInfo()
+	local zoneName, instanceType, difficulty, difficultyName, _, _, _, instanceID = GetInstanceInfo()
 	if difficulty == 0 and (instanceType == "raid" or instanceType == "party") then
 		-- this shouldn't really be needed, but oh well
 		if checkAttempt < 15 then
@@ -63,14 +63,14 @@ function addon:CheckInstance(override)
 	checkAttempt = 0
 	if instanceType == "raid" or (instanceType == "party" and difficulty == 8) then -- raid or challenge mode
 		local db = self.db.profile
-		if not db.zones[areaID] then
-			db.zones[areaID] = {}
+		if not db.zones[instanceID] then
+			db.zones[instanceID] = {}
 		end
 		if override ~= nil then -- called from the prompt
-			db.zones[areaID][difficulty] = override
+			db.zones[instanceID][difficulty] = override
 		end
 
-		if db.zones[areaID][difficulty] == nil then
+		if db.zones[instanceID][difficulty] == nil then
 			if db.prompt and (not db.partial or GetNumGroupMembers() > 4) then
 				ShowPrompt(zoneName, difficultyName)
 				if difficulty == 8 then -- catch the m+ start event
@@ -78,11 +78,11 @@ function addon:CheckInstance(override)
 				end
 				return
 			else
-				db.zones[areaID][difficulty] = false
+				db.zones[instanceID][difficulty] = false
 			end
 		end
 
-		if db.zones[areaID][difficulty] then
+		if db.zones[instanceID][difficulty] then
 			self:EnableLogging(true)
 			return
 		end
