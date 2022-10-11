@@ -128,7 +128,7 @@ else
 		return 0, 0, GetRealZoneText(id)
 	end
 
-	if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+	if isClassicEra then
 		-- So classic left the function ... but it returns nothing.
 		GetDifficultyInfo = function(id)
 			if id == 1 or id == 184 then
