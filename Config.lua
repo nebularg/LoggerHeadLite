@@ -217,7 +217,7 @@ local function GetOptions()
 				for diff in next, difficulties do
 					if diff == 8 then
 						values = nil
-						difficultyName = GetDifficultyInfo(diff)
+						difficultyName = GetDifficultyInfo(diff) or L["Dungeons"]
 						break
 					elseif diff == 2 then
 						values = nil
@@ -239,7 +239,7 @@ local function GetOptions()
 						end,
 						order = index,
 					}
-				elseif difficultyName and tierName ~= UNKNOWN then
+				else
 					local diff = next(difficulties)
 					if not options.args[tierName].args["keystone"] then
 						options.args[tierName].args["keystone"] = {
