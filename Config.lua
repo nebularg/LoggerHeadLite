@@ -52,7 +52,7 @@ if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
 	end
 else
 	local mapData = {
-		-- Classic
+		-- Classic Raids
 		[249] = {WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and 1 or 3}, -- Onyxia's Lair
 		[309] = {1}, -- Zul'Gurub
 		[409] = {1}, -- Molten Core
@@ -60,7 +60,7 @@ else
 		[509] = {1}, -- Ruins of Ahn'Qiraj
 		[531] = {1}, -- Ahn'Qiraj Temple
 		[533] = {WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and 1 or 3}, -- Naxxramas
-		-- TBC
+		-- TBC Raids
 		[532] = {2}, -- Karazhan
 		[534] = {2}, -- Hyjal Summit
 		[544] = {2}, -- Magtheridon's Lair
@@ -70,7 +70,24 @@ else
 		[565] = {2}, -- Gruul's Lair
 		[568] = {2}, -- Zul'Aman
 		[580] = {2}, -- Sunwell Plateau
-		-- Wrath
+		-- TBC Dungeons
+		[269] = {2}, -- The Black Morass
+		[540] = {2}, -- The Shattered Halls
+		[542] = {2}, -- The Blood Furnace
+		[546] = {2}, -- The Underbog
+		[545] = {2}, -- The Steamvault
+		[547] = {2}, -- The Slave Pens
+		[543] = {2}, -- Hellfire Ramparts
+		[552] = {2}, -- The Arcatraz
+		[554] = {2}, -- The Mechanar
+		[553] = {2}, -- The Botanica
+		[555] = {2}, -- Shadow Labyrinth
+		[556] = {2}, -- Sethekk Halls
+		[557] = {2}, -- Mana-Tombs
+		[558] = {2}, -- Auchenai Crypts
+		[585] = {2}, -- Magisters' Terrace
+		[560] = {2}, -- Old Hillsbrad Foothills
+		-- Wrath Raids
 		[603] = {3}, -- Ulduar
 		[615] = {3}, -- The Obsidian Sanctum
 		[616] = {3}, -- The Eye of Eternity
@@ -78,6 +95,23 @@ else
 		[631] = {3}, -- Icecrown Citadel
 		[649] = {3}, -- Trial of the Crusader
 		[724] = {3}, -- The Ruby Sanctum
+		-- Wrath Dungeons
+		[574] = {3}, -- Utgarde Keep
+		[575] = {3}, -- Utgarde Pinnacle
+		[576] = {3}, -- The Nexus
+		[578] = {3}, -- The Oculus
+		[595] = {3}, -- The Culling of Stratholme
+		[599] = {3}, -- Halls of Stone
+		[600] = {3}, -- Drak'Tharon Keep
+		[601] = {3}, -- Azjol-Nerub
+		[602] = {3}, -- Halls of Lightning
+		[604] = {3}, -- Gundrak
+		[608] = {3}, -- The Violet Hold
+		[619] = {3}, -- Ahn'kahet: The Old Kingdom
+		[632] = {3}, -- The Forge of Souls
+		[650] = {3}, -- Trial of the Champion
+		[658] = {3}, -- Pit of Saron
+		[668] = {3}, -- Halls of Reflection
 	}
 
 	function getTierName(tier)
@@ -175,10 +209,16 @@ local function GetOptions()
 					}
 				end
 
+				local difficultyName
 				local values = {}
 				for diff in next, difficulties do
 					if diff == 8 then
 						values = nil
+						difficultyName = GetDifficultyInfo(diff)
+						break
+					elseif diff == 2 then
+						values = nil
+						difficultyName = L["Dungeons"]
 						break
 					end
 					values[diff] = GetDifficultyInfo(diff) or UNKNOWN_ID:format(diff)
@@ -196,14 +236,15 @@ local function GetOptions()
 						end,
 						order = index,
 					}
-				elseif GetDifficultyInfo(8) then -- Classic check, just skip keystones (copied savedvars?)
+				elseif difficultyName and tierName ~= UNKNOWN then
+					local diff = next(difficulties)
 					if not options.args[tierName].args["keystone"] then
 						options.args[tierName].args["keystone"] = {
 							type = "group", inline = true,
-							name = GetDifficultyInfo(8),
-							get = function(info) return db.zones[info.arg][8] end,
+							name = difficultyName,
+							get = function(info) return db.zones[info.arg][diff] end,
 							set = function(info, value)
-								db.zones[info.arg][8] = value
+								db.zones[info.arg][diff] = value
 								addon:CheckInstance()
 							end,
 							order = -1,

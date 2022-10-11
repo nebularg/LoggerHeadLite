@@ -8,6 +8,7 @@ L["EXPANSION_NAME2"] = "Wrath of the Lich King"
 L["Normal"] = true
 L["20 Player"] = true
 L["40 Player"] = true
+L["Dungeons"] = true
 
 L["Automatically turns on the combat log for selected raid and mythic+ instances."] = true
 L["|cffeda55fClick|r to toggle combat logging\n|cffeda55fRight-Click|r to open the options menu"] = true

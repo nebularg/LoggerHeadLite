@@ -3,6 +3,8 @@ LibStub("AceAddon-3.0"):NewAddon(addon, ADDON_NAME, "AceEvent-3.0", "AceTimer-3.
 
 local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 
+local dungeonLogDifficulty = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and 8 or 2
+
 local defaults = {
 	profile = {
 		zones = {},
@@ -67,7 +69,7 @@ function addon:CheckInstance(override)
 		return
 	end
 	checkAttempt = 0
-	if instanceType == "raid" or (instanceType == "party" and difficulty == 8) then -- raid or challenge mode
+	if instanceType == "raid" or (instanceType == "party" and difficulty == dungeonLogDifficulty) then -- raid or challenge mode/classic heroic
 		local db = self.db.profile
 		if not db.zones[instanceID] then
 			db.zones[instanceID] = {}

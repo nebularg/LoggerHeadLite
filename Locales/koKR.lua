@@ -8,5 +8,6 @@ L["EXPANSION_NAME2"] = "리치 왕의 분노"
 L["Normal"] = "일반"
 L["20 Player"] = "20인"
 L["40 Player"] = "40인"
+L["Dungeons"] = "던전"
 
 --@localization(locale="koKR", format="lua_additive_table", handle-unlocalized="ignore")@

@@ -8,5 +8,6 @@ L["EXPANSION_NAME2"] = "Wrath of the Lich King"
 L["Normal"] = "Normale"
 L["20 Player"] = "20 giocatori"
 L["40 Player"] = "40 giocatori"
+L["Dungeons"] = "Spedizioni"
 
 --@localization(locale="itIT", format="lua_additive_table", handle-unlocalized="ignore")@
