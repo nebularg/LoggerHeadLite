@@ -3,7 +3,13 @@ LibStub("AceAddon-3.0"):NewAddon(addon, ADDON_NAME, "AceEvent-3.0", "AceTimer-3.
 
 local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 
-local dungeonLogDifficulty = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and 8 or 2
+local isClassicEra = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+local isClassic = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE and not isClassicEra
+
+local dungeonLogDifficulty = {
+	[8] = true, -- Mythic Keystone
+	[2] = isClassic, [174] = isClassic, -- Heroic
+}
 
 local defaults = {
 	profile = {
@@ -34,7 +40,7 @@ local function ShowPrompt(zone, diff)
 			preferredIndex = STATICPOPUP_NUMDIALOGS,
 		}
 	end
-	if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+	if isClassicEra then
 		StaticPopup_Show("LoggerHeadLiteLogConfirm", zone)
 	else
 		StaticPopup_Show("LoggerHeadLiteLogConfirm", ("%s %s"):format(diff, zone))
@@ -47,7 +53,7 @@ end
 
 function addon:OnEnable()
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
-	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+	if not isClassicEra then
 		self:RegisterEvent("PLAYER_DIFFICULTY_CHANGED", "PLAYER_ENTERING_WORLD")
 	end
 	self:CheckInstance()
@@ -69,7 +75,7 @@ function addon:CheckInstance(override)
 		return
 	end
 	checkAttempt = 0
-	if instanceType == "raid" or (instanceType == "party" and difficulty == dungeonLogDifficulty) then -- raid or challenge mode/classic heroic
+	if instanceType == "raid" or (instanceType == "party" and dungeonLogDifficulty[difficulty]) then -- raid or challenge mode/classic heroic
 		local db = self.db.profile
 		if not db.zones[instanceID] then
 			db.zones[instanceID] = {}
