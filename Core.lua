@@ -32,7 +32,11 @@ local function ShowPrompt(zone, diff)
 			preferredIndex = STATICPOPUP_NUMDIALOGS,
 		}
 	end
-	StaticPopup_Show("LoggerHeadLiteLogConfirm", ("%s %s"):format(diff, zone))
+	if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+		StaticPopup_Show("LoggerHeadLiteLogConfirm", zone)
+	else
+		StaticPopup_Show("LoggerHeadLiteLogConfirm", ("%s %s"):format(diff, zone))
+	end
 end
 
 function addon:OnInitialize()
@@ -41,7 +45,9 @@ end
 
 function addon:OnEnable()
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
-	self:RegisterEvent("PLAYER_DIFFICULTY_CHANGED", "PLAYER_ENTERING_WORLD")
+	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+		self:RegisterEvent("PLAYER_DIFFICULTY_CHANGED", "PLAYER_ENTERING_WORLD")
+	end
 	self:CheckInstance()
 end
 

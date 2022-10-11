@@ -11,6 +11,8 @@ local DISABLED = "|cffff0000"..L["Disabled"].."|r"
 local UNKNOWN = _G.UNKNOWN
 local UNKNOWN_ID = UNKNOWN.." (%d)"
 
+local GetDifficultyInfo = _G.GetDifficultyInfo
+
 local getTierName, getInstanceInfo
 
 if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
@@ -87,6 +89,19 @@ else
 	function getInstanceInfo(id)
 		local tier = mapData[id] and mapData[id][1] or 0
 		return tier, 0, GetRealZoneText(id)
+	end
+
+	if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+		-- So classic left the function ... but it returns nothing.
+		GetDifficultyInfo = function(id)
+			if id == 1 or id == 184 then
+				return L["Normal"]
+			elseif id == 9 or id == 186 then
+				return L["40 Player"]
+			elseif id == 148 or id == 185 then
+				return L["20 Player"]
+			end
+		end
 	end
 end
 
