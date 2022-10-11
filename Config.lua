@@ -51,67 +51,68 @@ if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
 		return 0, 0, GetRealZoneText(id)
 	end
 else
+	local isClassicEra = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 	local mapData = {
 		-- Classic Raids
-		[249] = {WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and 1 or 3}, -- Onyxia's Lair
-		[309] = {1}, -- Zul'Gurub
-		[409] = {1}, -- Molten Core
-		[469] = {1}, -- Blackwing Lair
-		[509] = {1}, -- Ruins of Ahn'Qiraj
-		[531] = {1}, -- Ahn'Qiraj Temple
-		[533] = {WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and 1 or 3}, -- Naxxramas
+		[249] = {isClassicEra and 1 or 3, isClassicEra and 1 or 7}, -- Onyxia's Lair
+		[409] = {1, 2},  -- Molten Core
+		[469] = {1, 3},  -- Blackwing Lair
+		[309] = {1, 4},  -- Zul'Gurub
+		[509] = {1, 5},  -- Ruins of Ahn'Qiraj
+		[531] = {1, 6},  -- Ahn'Qiraj Temple
+		[533] = {isClassicEra and 1 or 3, isClassicEra and 7 or 2}, -- Naxxramas
 		-- TBC Raids
-		[532] = {2}, -- Karazhan
-		[534] = {2}, -- Hyjal Summit
-		[544] = {2}, -- Magtheridon's Lair
-		[548] = {2}, -- Serpentshrine Cavern
-		[550] = {2}, -- Tempest Keep
-		[564] = {2}, -- Black Temple
-		[565] = {2}, -- Gruul's Lair
-		[568] = {2}, -- Zul'Aman
-		[580] = {2}, -- Sunwell Plateau
+		[532] = {2, 1},  -- Karazhan
+		[565] = {2, 2},  -- Gruul's Lair
+		[544] = {2, 3},  -- Magtheridon's Lair
+		[548] = {2, 4},  -- Serpentshrine Cavern
+		[550] = {2, 5},  -- Tempest Keep
+		[534] = {2, 6},  -- Hyjal Summit
+		[564] = {2, 7},  -- Black Temple
+		[568] = {2, 8},  -- Zul'Aman
+		[580] = {2, 9},  -- Sunwell Plateau
 		-- TBC Dungeons
-		[269] = {2}, -- The Black Morass
-		[540] = {2}, -- The Shattered Halls
-		[542] = {2}, -- The Blood Furnace
-		[546] = {2}, -- The Underbog
-		[545] = {2}, -- The Steamvault
-		[547] = {2}, -- The Slave Pens
-		[543] = {2}, -- Hellfire Ramparts
-		[552] = {2}, -- The Arcatraz
-		[554] = {2}, -- The Mechanar
-		[553] = {2}, -- The Botanica
-		[555] = {2}, -- Shadow Labyrinth
-		[556] = {2}, -- Sethekk Halls
-		[557] = {2}, -- Mana-Tombs
-		[558] = {2}, -- Auchenai Crypts
-		[585] = {2}, -- Magisters' Terrace
-		[560] = {2}, -- Old Hillsbrad Foothills
+		[558] = {2, 1},  -- Auchenai Crypts
+		[543] = {2, 2},  -- Hellfire Ramparts
+		[585] = {2, 3},  -- Magisters' Terrace
+		[557] = {2, 4},  -- Mana-Tombs
+		[560] = {2, 5},  -- Old Hillsbrad Foothills
+		[556] = {2, 6},  -- Sethekk Halls
+		[555] = {2, 7},  -- Shadow Labyrinth
+		[552] = {2, 8},  -- The Arcatraz
+		[269] = {2, 9},  -- The Black Morass
+		[542] = {2, 10}, -- The Blood Furnace
+		[553] = {2, 11}, -- The Botanica
+		[554] = {2, 12}, -- The Mechanar
+		[540] = {2, 13}, -- The Shattered Halls
+		[547] = {2, 14}, -- The Slave Pens
+		[545] = {2, 15}, -- The Steamvault
+		[546] = {2, 16}, -- The Underbog
 		-- Wrath Raids
-		[603] = {3}, -- Ulduar
-		[615] = {3}, -- The Obsidian Sanctum
-		[616] = {3}, -- The Eye of Eternity
-		[624] = {3}, -- Vault of Archavon
-		[631] = {3}, -- Icecrown Citadel
-		[649] = {3}, -- Trial of the Crusader
-		[724] = {3}, -- The Ruby Sanctum
+		[624] = {3, 1},  -- Vault of Archavon
+		[615] = {3, 3},  -- The Obsidian Sanctum
+		[616] = {3, 4},  -- The Eye of Eternity
+		[603] = {3, 5},  -- Ulduar
+		[649] = {3, 6},  -- Trial of the Crusader
+		[631] = {3, 8},  -- Icecrown Citadel
+		[724] = {3, 9},  -- The Ruby Sanctum
 		-- Wrath Dungeons
-		[574] = {3}, -- Utgarde Keep
-		[575] = {3}, -- Utgarde Pinnacle
-		[576] = {3}, -- The Nexus
-		[578] = {3}, -- The Oculus
-		[595] = {3}, -- The Culling of Stratholme
-		[599] = {3}, -- Halls of Stone
-		[600] = {3}, -- Drak'Tharon Keep
-		[601] = {3}, -- Azjol-Nerub
-		[602] = {3}, -- Halls of Lightning
-		[604] = {3}, -- Gundrak
-		[608] = {3}, -- The Violet Hold
-		[619] = {3}, -- Ahn'kahet: The Old Kingdom
-		[632] = {3}, -- The Forge of Souls
-		[650] = {3}, -- Trial of the Champion
-		[658] = {3}, -- Pit of Saron
-		[668] = {3}, -- Halls of Reflection
+		[619] = {3, 1},  -- Ahn'kahet: The Old Kingdom
+		[601] = {3, 2},  -- Azjol-Nerub
+		[600] = {3, 3},  -- Drak'Tharon Keep
+		[604] = {3, 4},  -- Gundrak
+		[602] = {3, 5},  -- Halls of Lightning
+		[668] = {3, 6},  -- Halls of Reflection
+		[599] = {3, 7},  -- Halls of Stone
+		[658] = {3, 8},  -- Pit of Saron
+		[595] = {3, 9},  -- The Culling of Stratholme
+		[632] = {3, 10}, -- The Forge of Souls
+		[576] = {3, 11}, -- The Nexus
+		[578] = {3, 12}, -- The Oculus
+		[608] = {3, 13}, -- The Violet Hold
+		[650] = {3, 14}, -- Trial of the Champion
+		[574] = {3, 15}, -- Utgarde Keep
+		[575] = {3, 16}, -- Utgarde Pinnacle
 	}
 
 	function getTierName(tier)
@@ -121,8 +122,10 @@ else
 	end
 
 	function getInstanceInfo(id)
-		local tier = mapData[id] and mapData[id][1] or 0
-		return tier, 0, GetRealZoneText(id)
+		if mapData[id] then
+			return mapData[id][1], mapData[id][2], GetRealZoneText(id)
+		end
+		return 0, 0, GetRealZoneText(id)
 	end
 
 	if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
