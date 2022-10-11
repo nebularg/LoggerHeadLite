@@ -11,11 +11,14 @@ local DISABLED = "|cffff0000"..L["Disabled"].."|r"
 local UNKNOWN = _G.UNKNOWN
 local UNKNOWN_ID = UNKNOWN.." (%d)"
 
+local isRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
+local isClassicEra = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+
 local GetDifficultyInfo = _G.GetDifficultyInfo
 
 local getTierName, getInstanceInfo
 
-if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+if isRetail then
 	function getTierName(index)
 		local name = EJ_GetTierInfo(index)
 		return name
@@ -39,19 +42,18 @@ if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
 		for tier = 1, EJ_GetNumTiers() do
 			local name, index = getInstanceName(id, tier, true)
 			if name then
-				return tier, index, name
+				return tier, index, name, "raid"
 			end
 			if tier > 4 then -- MoP+ for challenge mode dungeons
 				name, index = getInstanceName(id, tier, false)
 				if name then
-					return tier, index, name
+					return tier, index, name, "party"
 				end
 			end
 		end
-		return 0, 0, GetRealZoneText(id)
+		return 0, 0, GetRealZoneText(id), "raid"
 	end
 else
-	local isClassicEra = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 	local mapData = {
 		-- Classic Raids
 		[249] = {isClassicEra and 1 or 3, isClassicEra and 1 or 7}, -- Onyxia's Lair
@@ -72,22 +74,22 @@ else
 		[568] = {2, 8},  -- Zul'Aman
 		[580] = {2, 9},  -- Sunwell Plateau
 		-- TBC Dungeons
-		[558] = {2, 1},  -- Auchenai Crypts
-		[543] = {2, 2},  -- Hellfire Ramparts
-		[585] = {2, 3},  -- Magisters' Terrace
-		[557] = {2, 4},  -- Mana-Tombs
-		[560] = {2, 5},  -- Old Hillsbrad Foothills
-		[556] = {2, 6},  -- Sethekk Halls
-		[555] = {2, 7},  -- Shadow Labyrinth
-		[552] = {2, 8},  -- The Arcatraz
-		[269] = {2, 9},  -- The Black Morass
-		[542] = {2, 10}, -- The Blood Furnace
-		[553] = {2, 11}, -- The Botanica
-		[554] = {2, 12}, -- The Mechanar
-		[540] = {2, 13}, -- The Shattered Halls
-		[547] = {2, 14}, -- The Slave Pens
-		[545] = {2, 15}, -- The Steamvault
-		[546] = {2, 16}, -- The Underbog
+		[558] = {2, 1, "party"},  -- Auchenai Crypts
+		[543] = {2, 2, "party"},  -- Hellfire Ramparts
+		[585] = {2, 3, "party"},  -- Magisters' Terrace
+		[557] = {2, 4, "party"},  -- Mana-Tombs
+		[560] = {2, 5, "party"},  -- Old Hillsbrad Foothills
+		[556] = {2, 6, "party"},  -- Sethekk Halls
+		[555] = {2, 7, "party"},  -- Shadow Labyrinth
+		[552] = {2, 8, "party"},  -- The Arcatraz
+		[269] = {2, 9, "party"},  -- The Black Morass
+		[542] = {2, 10, "party"}, -- The Blood Furnace
+		[553] = {2, 11, "party"}, -- The Botanica
+		[554] = {2, 12, "party"}, -- The Mechanar
+		[540] = {2, 13, "party"}, -- The Shattered Halls
+		[547] = {2, 14, "party"}, -- The Slave Pens
+		[545] = {2, 15, "party"}, -- The Steamvault
+		[546] = {2, 16, "party"}, -- The Underbog
 		-- Wrath Raids
 		[624] = {3, 1},  -- Vault of Archavon
 		[615] = {3, 3},  -- The Obsidian Sanctum
@@ -97,22 +99,22 @@ else
 		[631] = {3, 8},  -- Icecrown Citadel
 		[724] = {3, 9},  -- The Ruby Sanctum
 		-- Wrath Dungeons
-		[619] = {3, 1},  -- Ahn'kahet: The Old Kingdom
-		[601] = {3, 2},  -- Azjol-Nerub
-		[600] = {3, 3},  -- Drak'Tharon Keep
-		[604] = {3, 4},  -- Gundrak
-		[602] = {3, 5},  -- Halls of Lightning
-		[668] = {3, 6},  -- Halls of Reflection
-		[599] = {3, 7},  -- Halls of Stone
-		[658] = {3, 8},  -- Pit of Saron
-		[595] = {3, 9},  -- The Culling of Stratholme
-		[632] = {3, 10}, -- The Forge of Souls
-		[576] = {3, 11}, -- The Nexus
-		[578] = {3, 12}, -- The Oculus
-		[608] = {3, 13}, -- The Violet Hold
-		[650] = {3, 14}, -- Trial of the Champion
-		[574] = {3, 15}, -- Utgarde Keep
-		[575] = {3, 16}, -- Utgarde Pinnacle
+		[619] = {3, 1, "party"},  -- Ahn'kahet: The Old Kingdom
+		[601] = {3, 2, "party"},  -- Azjol-Nerub
+		[600] = {3, 3, "party"},  -- Drak'Tharon Keep
+		[604] = {3, 4, "party"},  -- Gundrak
+		[602] = {3, 5, "party"},  -- Halls of Lightning
+		[668] = {3, 6, "party"},  -- Halls of Reflection
+		[599] = {3, 7, "party"},  -- Halls of Stone
+		[658] = {3, 8, "party"},  -- Pit of Saron
+		[595] = {3, 9, "party"},  -- The Culling of Stratholme
+		[632] = {3, 10, "party"}, -- The Forge of Souls
+		[576] = {3, 11, "party"}, -- The Nexus
+		[578] = {3, 12, "party"}, -- The Oculus
+		[608] = {3, 13, "party"}, -- The Violet Hold
+		[650] = {3, 14, "party"}, -- Trial of the Champion
+		[574] = {3, 15, "party"}, -- Utgarde Keep
+		[575] = {3, 16, "party"}, -- Utgarde Pinnacle
 	}
 
 	function getTierName(tier)
@@ -123,9 +125,9 @@ else
 
 	function getInstanceInfo(id)
 		if mapData[id] then
-			return mapData[id][1], mapData[id][2], GetRealZoneText(id)
+			return mapData[id][1], mapData[id][2], GetRealZoneText(id), mapData[id][3] or "raid"
 		end
-		return 0, 0, GetRealZoneText(id)
+		return 0, 0, GetRealZoneText(id), "raid"
 	end
 
 	if isClassicEra then
@@ -199,7 +201,7 @@ local function GetOptions()
 			if not next(difficulties) then
 				db.zones[id] = nil
 			else
-				local tier, index, name = getInstanceInfo(id)
+				local tier, index, name, type = getInstanceInfo(id)
 				if not name or name == "" then name = UNKNOWN_ID:format(id) end
 				local tierName = getTierName(tier) or UNKNOWN
 
@@ -212,22 +214,17 @@ local function GetOptions()
 					}
 				end
 
-				local difficultyName
-				local values = {}
-				for diff in next, difficulties do
-					if diff == 8 then
-						values = nil
-						difficultyName = GetDifficultyInfo(diff) or L["Dungeons"]
-						break
-					elseif diff == 2 then
-						values = nil
-						difficultyName = L["Dungeons"]
-						break
+				local values
+				if type == "party" then
+					values = next(difficulties)
+				else
+					values = {}
+					for diff in next, difficulties do
+						values[diff] = GetDifficultyInfo(diff) or UNKNOWN_ID:format(diff)
 					end
-					values[diff] = GetDifficultyInfo(diff) or UNKNOWN_ID:format(diff)
 				end
 
-				if values then
+				if type(values) == "table" then
 					options.args[tierName].args[name] = {
 						type = "multiselect",
 						name = name,
@@ -240,21 +237,20 @@ local function GetOptions()
 						order = index,
 					}
 				else
-					local diff = next(difficulties)
-					if not options.args[tierName].args["keystone"] then
-						options.args[tierName].args["keystone"] = {
+					if not options.args[tierName].args["dungeons"] then
+						options.args[tierName].args["dungeons"] = {
 							type = "group", inline = true,
-							name = difficultyName,
-							get = function(info) return db.zones[info.arg][diff] end,
+							name = L["Dungeons"],
+							get = function(info) return db.zones[info.arg][values] end,
 							set = function(info, value)
-								db.zones[info.arg][diff] = value
+								db.zones[info.arg][values] = value
 								addon:CheckInstance()
 							end,
 							order = -1,
 							args = {},
 						}
 					end
-					options.args[tierName].args["keystone"].args[name] = {
+					options.args[tierName].args["dungeons"].args[name] = {
 						type = "toggle",
 						name = name,
 						arg = id,
@@ -322,8 +318,8 @@ function module:OnInitialize()
 end
 
 function addon:OpenOptions()
-	InterfaceOptionsFrame_OpenToCategory(ADDON_TITLE)
-	InterfaceOptionsFrame_OpenToCategory(ADDON_TITLE)
+	_G.InterfaceOptionsFrame_OpenToCategory(ADDON_TITLE)
+	_G.InterfaceOptionsFrame_OpenToCategory(ADDON_TITLE)
 end
 
 SLASH_LOGGERHEAD1 = "/loggerhead"
