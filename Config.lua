@@ -201,7 +201,7 @@ local function GetOptions()
 			if not next(difficulties) then
 				db.zones[id] = nil
 			else
-				local tier, index, name, type = getInstanceInfo(id)
+				local tier, index, name, itype = getInstanceInfo(id)
 				if not name or name == "" then name = UNKNOWN_ID:format(id) end
 				local tierName = getTierName(tier) or UNKNOWN
 
@@ -215,7 +215,7 @@ local function GetOptions()
 				end
 
 				local values
-				if type == "party" then
+				if itype == "party" then
 					values = next(difficulties)
 				else
 					values = {}
@@ -284,7 +284,7 @@ function module:OnInitialize()
 		label = COMBAT_LOG,
 		icon = LoggingCombat() and "Interface\\AddOns\\LoggerHeadLite\\enabled" or "Interface\\AddOns\\LoggerHeadLite\\disabled",
 		text = LoggingCombat() and ENABLED or DISABLED,
-		OnClick = function(self, button)
+		OnClick = function(_, button)
 			if button == "RightButton" then
 				addon:OpenOptions()
 			elseif button == "LeftButton" then
