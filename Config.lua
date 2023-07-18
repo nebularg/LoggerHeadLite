@@ -20,8 +20,10 @@ local getTierName, getInstanceInfo
 
 if isRetail then
 	function getTierName(index)
-		local name = EJ_GetTierInfo(index)
-		return name
+		if index > 0 then
+			local name = EJ_GetTierInfo(index)
+			return name
+		end
 	end
 
 	local function getInstanceName(id, tier, isRaid)
