@@ -57,6 +57,8 @@ if isRetail then
 	end
 else
 	local mapData = {
+		-- Classic Era Raids
+		[48] = {isClassicEra and 1, isClassicEra and 1}, -- Blackfathom Deeps (SoD)
 		-- Classic Raids
 		[249] = {isClassicEra and 1 or 3, isClassicEra and 1 or 7}, -- Onyxia's Lair
 		[409] = {1, 2},  -- Molten Core
@@ -135,7 +137,7 @@ else
 	if isClassicEra then
 		-- So classic left the function ... but it returns nothing.
 		GetDifficultyInfo = function(id)
-			if id == 1 or id == 184 then
+			if id == 1 or id == 184 or id == 198 then
 				return L["Normal"]
 			elseif id == 9 or id == 186 then
 				return L["40 Player"]

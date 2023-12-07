@@ -9,6 +9,7 @@ local isClassic = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE and not isClassicEra
 local dungeonLogDifficulty = {
 	[8] = true, -- Mythic Keystone
 	[2] = isClassic, [174] = isClassic, -- Heroic
+	[198] = isClassicEra, -- Blackfathom Deeps (SoD)
 }
 
 local defaults = {
