@@ -9,11 +9,6 @@ on:
     paths-ignore:
       - '.github/**'
 
-env:
-  CF_API_KEY: ${{ secrets.CF_API_KEY }}
-  WAGO_TOKEN: ${{ secrets.WAGO_TOKEN }}
-  GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,3 +19,7 @@ jobs:
         fetch-depth: 0
 
     - uses: BigWigsMods/packager@master
+      env:
+        CF_API_KEY: ${{ secrets.CF_API_KEY }}
+        WAGO_API_TOKEN: ${{ secrets.WAGO_TOKEN }}
+        GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
