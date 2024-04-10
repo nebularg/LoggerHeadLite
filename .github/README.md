@@ -13,3 +13,4 @@ If you want to clear out old entries, you can reset the database in Profiles.
 ## Download
 
 <https://www.curseforge.com/wow/addons/loggerheadlite>
+<https://addons.wago.io/addons/loggerheadlite>

@@ -9,6 +9,8 @@
 ## SavedVariables: LoggerHeadNDB
 ## OptionalDeps: Ace3, LibDBIcon-1.0
 ## X-Category: Raid
+## X-Curse-Project-ID: 65523
+## X-Wago-ID: E6gLP4K1
 ## X-Credits: Sano/rsmozang for LoggerHead
 
 embeds.xml

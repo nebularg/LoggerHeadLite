@@ -1,0 +1,23 @@
+name: Package
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - '*'
+    paths-ignore:
+      - '.github/**'
+
+env:
+  CF_API_KEY: ${{ secrets.CF_API_KEY }}
+  WAGO_TOKEN: ${{ secrets.WAGO_TOKEN }}
+  GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: BigWigsMods/packager@master
