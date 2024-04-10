@@ -59,6 +59,8 @@ else
 	local mapData = {
 		-- Classic Era Raids
 		[48] = {isClassicEra and 1, isClassicEra and 1}, -- Blackfathom Deeps (SoD)
+		[90] = {isClassicEra and 1, isClassicEra and 2}, -- Gnomeregan (SoD)
+		[109] = {isClassicEra and 1, isClassicEra and 3}, -- Sunken Temple (SoD)
 		-- Classic Raids
 		[249] = {isClassicEra and 1 or 3, isClassicEra and 1 or 7}, -- Onyxia's Lair
 		[409] = {1, 2},  -- Molten Core
@@ -132,19 +134,6 @@ else
 			return mapData[id][1], mapData[id][2], GetRealZoneText(id), mapData[id][3] or "raid"
 		end
 		return 0, 0, GetRealZoneText(id), "raid"
-	end
-
-	if isClassicEra then
-		-- So classic left the function ... but it returns nothing.
-		GetDifficultyInfo = function(id)
-			if id == 1 or id == 184 or id == 198 then
-				return L["Normal"]
-			elseif id == 9 or id == 186 then
-				return L["40 Player"]
-			elseif id == 148 or id == 185 then
-				return L["20 Player"]
-			end
-		end
 	end
 end
 
