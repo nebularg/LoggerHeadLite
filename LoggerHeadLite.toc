@@ -1,4 +1,4 @@
-## Interface: 100206
+## Interface: 11502, 100207, 40400
 ## Title: LoggerHead Lite
 ## Notes: Automatically turns on the combat log for selected raid and mythic+ instances.
 ## Notes-deDE: Schaltet die Kampfaufzeichnung automatisch für ausgewählte Schlachtzugsinstanzen und Mythisch+-Dungeons ein.
