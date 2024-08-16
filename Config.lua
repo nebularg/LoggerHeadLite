@@ -15,6 +15,7 @@ local isRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local isClassicEra = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 
 local GetDifficultyInfo = _G.GetDifficultyInfo
+local Settings = _G.Settings
 
 local getTierName, getInstanceInfo
 
@@ -311,8 +312,12 @@ function module:OnInitialize()
 end
 
 function addon:OpenOptions()
-	_G.InterfaceOptionsFrame_OpenToCategory(ADDON_TITLE)
-	_G.InterfaceOptionsFrame_OpenToCategory(ADDON_TITLE)
+	if Settings and Settings.RegisterCanvasLayoutCategory then
+		Settings.OpenToCategory(ADDON_TITLE)
+	else
+		_G.InterfaceOptionsFrame_OpenToCategory(ADDON_TITLE)
+		_G.InterfaceOptionsFrame_OpenToCategory(ADDON_TITLE)
+	end
 end
 
 SLASH_LOGGERHEAD1 = "/loggerhead"
