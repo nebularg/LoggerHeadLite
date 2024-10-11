@@ -56,13 +56,19 @@ end
 function addon:OnEnable()
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
 	if not isClassicEra then
-		self:RegisterEvent("PLAYER_DIFFICULTY_CHANGED", "PLAYER_ENTERING_WORLD")
+		self:RegisterEvent("PLAYER_DIFFICULTY_CHANGED")
 	end
 	self:CheckInstance()
 end
 
 function addon:PLAYER_ENTERING_WORLD()
 	self:CheckInstance()
+end
+
+function addon:PLAYER_DIFFICULTY_CHANGED()
+	if IsInInstance() then
+		self:CheckInstance()
+	end
 end
 
 local checkAttempt = 0
