@@ -61,13 +61,20 @@ function addon:OnEnable()
 	self:CheckInstance()
 end
 
-function addon:PLAYER_ENTERING_WORLD()
-	self:CheckInstance()
-end
-
-function addon:PLAYER_DIFFICULTY_CHANGED()
-	if IsInInstance() then
+do
+	local prev = nil
+	function addon:PLAYER_ENTERING_WORLD()
+		prev = nil
 		self:CheckInstance()
+	end
+
+	function addon:PLAYER_DIFFICULTY_CHANGED()
+		-- XXX Fires on group update
+		local _, instanceType, difficulty = GetInstanceInfo()
+		if instanceType ~= "none" and prev ~= difficulty then
+			prev = difficulty
+			self:CheckInstance()
+		end
 	end
 end
 
