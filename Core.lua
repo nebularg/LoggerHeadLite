@@ -9,8 +9,11 @@ local isClassic = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE and not isClassicEra
 local dungeonLogDifficulty = {
 	[8] = true, -- Mythic Keystone
 	[2] = isClassic, [174] = isClassic, -- Heroic
+	[185] = isClassicEra, -- 20 Player (AQ20 - Classic Season of Discovery)
+	[186] = isClassicEra, -- 40 Player (Onyxia & BWL - Classic Season of Discovery)
 	[198] = isClassicEra, -- raid10 (Blackfathom Deeps/Gnomeregan - Classic Season of Discovery)
 	[215] = isClassicEra, -- raid20 (Sunken Temple - Classic Season of Discovery)
+	[226] = isClassicEra, -- 20 Player (Molten Core & ZG - Classic Season of Discovery)
 }
 
 local defaults = {

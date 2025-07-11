@@ -59,9 +59,14 @@ if isRetail then
 else
 	local mapData = {
 		-- Classic Era Raids
-		[48] = {isClassicEra and 1, isClassicEra and 1}, -- Blackfathom Deeps (SoD)
-		[90] = {isClassicEra and 1, isClassicEra and 2}, -- Gnomeregan (SoD)
-		[109] = {isClassicEra and 1, isClassicEra and 3}, -- Sunken Temple (SoD)
+		[48] = {isClassicEra and 1 or 0, isClassicEra and 1 or 0}, -- Blackfathom Deeps (SoD)
+		[90] = {isClassicEra and 1 or 0, isClassicEra and 2 or 0}, -- Gnomeregan (SoD)
+		[109] = {isClassicEra and 1 or 0, isClassicEra and 3 or 0}, -- Sunken Temple (SoD)
+		[2789] = {isClassicEra and 1 or 0, isClassicEra and 4 or 0}, -- The Tainted Scar (SoD)
+		[2791] = {isClassicEra and 1 or 0, isClassicEra and 5 or 0}, -- Storm Cliffs (SoD)
+		[2804] = {isClassicEra and 1 or 0, isClassicEra and 6 or 0}, -- The Crystal Vale (SoD)
+		[2832] = {isClassicEra and 1 or 0, isClassicEra and 7 or 0}, -- Nightmare Grove (SoD)
+		[2856] = {isClassicEra and 1 or 0, isClassicEra and 8 or 0}, -- Scarlet Enclave (SoD)
 		-- Classic Raids
 		[249] = {isClassicEra and 1 or 3, isClassicEra and 1 or 7}, -- Onyxia's Lair
 		[409] = {1, 2},  -- Molten Core
@@ -122,6 +127,46 @@ else
 		[650] = {3, 14, "party"}, -- Trial of the Champion
 		[574] = {3, 15, "party"}, -- Utgarde Keep
 		[575] = {3, 16, "party"}, -- Utgarde Pinnacle
+		-- Cata Raids
+		[757] = {4, 1}, -- Baradin Hold
+		[669] = {4, 2}, -- Blackwing Descent
+		[967] = {4, 3}, -- Dragon Soul
+		[720] = {4, 4}, -- Firelands
+		[671] = {4, 5}, -- The Bastion of Twilight
+		[754] = {4, 6}, -- Throne of the Four Winds
+		-- Cata Dungeons
+		[645] = {4, 1, "party"}, -- Blackrock Caverns
+		[36] = {not isClassicEra and 4 or 0, not isClassicEra and 2 or 0, "party"}, -- The Deadmines
+		[938] = {4, 3, "party"}, -- End Time
+		[670] = {4, 4, "party"}, -- Grim Batol
+		[644] = {4, 5, "party"}, -- Halls of Origination
+		[940] = {4, 6, "party"}, -- Hour of Twilight
+		[755] = {4, 7, "party"}, -- Lost City of the Tol'vir
+		[33] = {not isClassicEra and 4 or 0, not isClassicEra and 8 or 0, "party"}, -- Shadowfang Keep
+		[725] = {4, 9, "party"}, -- The Stonecore
+		[657] = {4, 10, "party"}, -- The Vortex Pinnacle
+		[643] = {4, 11, "party"}, -- Throne of the Tides
+		[939] = {4, 12, "party"}, -- Well of Eternity
+		[568] = {4, 13, "party"}, -- Zul'Aman
+		[859] = {not isClassicEra and 4 or 0, not isClassicEra and 14 or 0, "party"}, -- Zul'Gurub
+
+		-- Starting with Mists, all dungeons are listed, but only Cata and Mists raids
+		-- Mists Raids
+		[1008] = {5, 1}, -- Mogu'shan Vaults
+		[1009] = {5, 2}, -- Heart of Fear
+		[996] = {5, 3}, -- Terrace of Endless Spring
+		[1098] = {5, 4}, -- Throne of Thunder
+		[1136] = {5, 5}, -- Siege of Orgrimmar
+		-- Mists Dungeons
+		[962] = {5, 1, "party"}, -- Gate of the Setting Sun
+		[994] = {5, 2, "party"}, -- Mogu'Shan Palace
+		[1001] = {not isClassicEra and 5 or 0, not isClassicEra and 3 or 0}, -- Scarlet Halls
+		[1004] = {not isClassicEra and 5 or 0, not isClassicEra and 4 or 0}, -- Scarlet Monastery
+		[1007] = {not isClassicEra and 5 or 0, not isClassicEra and 5 or 0}, -- Scholomance
+		[959] = {5, 6, "party"}, -- Shado-pan Monastery
+		[1011] = {5, 7, "party"}, -- Siege of Niuzao Temple
+		[961] = {5, 8, "party"}, -- Stormstout Brewery
+		[960] = {5, 9, "party"}, -- Temple of the Jade Serpent
 	}
 
 	function getTierName(tier)
