@@ -17,6 +17,8 @@ local isClassicEra = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 local GetDifficultyInfo = _G.GetDifficultyInfo
 local Settings = _G.Settings
 
+local settingsCategoryID
+
 local getTierName, getInstanceInfo
 
 if isRetail then
@@ -150,7 +152,7 @@ else
 		[568] = {4, 13, "party"}, -- Zul'Aman
 		[859] = {not isClassicEra and 4 or 0, not isClassicEra and 14 or 0, "party"}, -- Zul'Gurub
 
-		-- Starting with Mists, all dungeons are listed, but only Cata and Mists raids
+		-- EJ is available with all dungeons, but only Cata and Mists raids
 		-- Mists Raids
 		[1008] = {5, 1}, -- Mogu'shan Vaults
 		[1009] = {5, 2}, -- Heart of Fear
@@ -313,7 +315,7 @@ end
 
 function module:OnInitialize()
 	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("LoggerHeadLite", GetOptions)
-	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("LoggerHeadLite", ADDON_TITLE)
+	settingsCategoryID = select(2, LibStub("AceConfigDialog-3.0"):AddToBlizOptions("LoggerHeadLite", ADDON_TITLE))
 
 	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("LoggerHeadLite/Profiles", LibStub("AceDBOptions-3.0"):GetOptionsTable(addon.db))
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("LoggerHeadLite/Profiles", L["Profiles"], ADDON_TITLE)
@@ -357,12 +359,7 @@ function module:OnInitialize()
 end
 
 function addon:OpenOptions()
-	if Settings and Settings.RegisterCanvasLayoutCategory then
-		Settings.OpenToCategory(ADDON_TITLE)
-	else
-		_G.InterfaceOptionsFrame_OpenToCategory(ADDON_TITLE)
-		_G.InterfaceOptionsFrame_OpenToCategory(ADDON_TITLE)
-	end
+	Settings.OpenToCategory(settingsCategoryID)
 end
 
 SLASH_LOGGERHEAD1 = "/loggerhead"
